@@ -2,10 +2,14 @@
 <div class="row">
 
   <div class="col-md-2">
-    <fg-list category="switch" on-add="addSwitch" on-del="delSwitch" on-set="setSwitch"
-             on-init="getSwitches">
+   <!-- <fg-list category="switch" on-add="addSwitch" on-del="delSwitch" on-set="setSwitch"
+             on-init="getSwitches"> -->
       Switches
-	  {{devices.content}}
+	  <br>
+	  <button analytics-on="click" class="btn btn-default" type="submit"
+             ng-click="getOnos()">
+			 GET DEVICES FROM ONOS
+	
       <div class="error" ng-show="errorMsg.length">
         {{errorMsg}}
       </div>
@@ -17,4 +21,5 @@
   </div>
 
 </div>
+
 
