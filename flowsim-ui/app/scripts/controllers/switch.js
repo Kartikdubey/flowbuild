@@ -18,7 +18,28 @@ angular.module('flowsimUiApp')
       });
       callback(null, switchList);
     };
-
+   
+   $scope.getOnos = function() {
+			     
+			 $http({
+                   url : "http://10.177.125.6:8181/onos/v1/devices",
+				   data: {"username": "onos", "password": "rocks"},
+                  method : 'GET',
+                 headers : {
+                       
+                   Authorization: 'Basic b25vczpyb2Nrcw=='
+                   }
+					}).success(function(data){
+						console.log(data);
+						alert("login Successfully");
+					}).error(function(error){
+						console.log(error);
+						alert("login error");
+					})
+	
+	};
+  
+    
     $scope.addSwitch = function(name, callback) {
       if(name in $scope.names) {
         callback('Name exists');
