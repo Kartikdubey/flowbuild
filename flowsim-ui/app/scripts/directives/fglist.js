@@ -20,7 +20,7 @@ angular.module('flowsimUiApp')
         onSet: '&',                        // callback for changing item focus
         category: '@'
       },
-      controller: function($scope) {
+      controller: function($scope,$http) {
         $scope.itemName = '';             // input name to create item
         $scope.focus    = -1;                // item with current focus
         $scope.errorMsg = '';         // input name error message
@@ -42,6 +42,29 @@ angular.module('flowsimUiApp')
         };
 
         $scope.addItem = function() {
+			     //$http.defaults.headers.common['Authorization'] = 'Basic b25vczpyb2Nrcw==';
+				 
+		         /*$http.get('http://10.177.125.6:8181/onos/v1/devices').
+				 
+                 then(function(response) {
+				 console.log(response);
+                 $scope.devices = response.data});*/
+				 $http({
+
+                   url : "http://10.177.125.6:8181/onos/v1/devices",
+				   data: {"username": "onos", "password": "rocks"},
+                  method : 'GET',
+                 headers : {
+                   //Content-Type : 'application/json',    
+                   Authorization: 'Basic b25vczpyb2Nrcw=='
+                   }
+					}).success(function(data){
+						console.log(data);
+						alert("login Successfully");
+					}).error(function(error){
+						console.log(error);
+						alert("login error");
+					})
           $scope.onAdd()($scope.itemName, function(err) {
             if(err) {
               $scope.itemName = '';

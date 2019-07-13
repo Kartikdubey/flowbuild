@@ -4,31 +4,31 @@
 
     <h1>Login</h1>
 
-    Welcome to Flowgrammable's OpenFlow switch simulator. We're excited to share
-    our latest work with you; however, you must be logged in to use our tools.
-
+    Flowbuild is a GUI tool to assist the configuraton of Openflow based Processing Pipeline for packet switching in Whitebox switches. 
+	It works as the northbound application of ONOS project and uses its REST API for performing Create, Retreive and Delete operations for Flow Table, 
+	Group and Meter entries for the Switches managed by ONOS controller.
+	
     <hr>
     <form ng-submit="login()" name="loginForm" novalidate role="form">
       <div class="form-group">
-        <label for="email">Email Address</label>
-        <input name="email" type="email" class="form-control" id="email"
-               placeholder="Enter email" ng-model="email" required>
-        <div class="error" ng-show="emailMsg.length">
+        <label for="email">User:</label>
+        <input name="email" type="text" class="form-control" id="email"
+             placeholder = "onos" ng-model="email" required>
+        <div class="error" >
           <span>{{emailMsg}}</span>
         </div>
       </div>
       <div class="form-group">
-        <label for="password">Password
-          <a href="#subscriber/forgot">(Forgot Password)</a>
+        <label for="password">Password:
         </label>
         <input name="password" type="password" class="form-control" id="password"
-               placeholder="Password" ng-model="password" required>
-        <div class="error" ng-show="passwordMsg.length">
+             placeholder = "rocks" ng-model="password" required>
+        <div class="error" >
           <span>{{passwordMsg}}</span>
         </div>
       </div>
       <button analytics-on="click" analytics-category="subscriber" analytics-event="login"
-       type="submit" class="btn btn-default"> Login </button>
+       type="submit" class="btn btn-success"> Login </button>
     </form>
 
     <div class="error" ng-show="errorMsg.length">

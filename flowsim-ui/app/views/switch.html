@@ -5,6 +5,7 @@
     <fg-list category="switch" on-add="addSwitch" on-del="delSwitch" on-set="setSwitch"
              on-init="getSwitches">
       Switches
+	  {{devices.content}}
       <div class="error" ng-show="errorMsg.length">
         {{errorMsg}}
       </div>

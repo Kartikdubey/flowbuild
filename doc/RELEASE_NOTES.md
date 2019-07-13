@@ -1,227 +1,69 @@
-# Release Notes
+Openflow flow-tables provides a very flexible mechanism to build Packet Processing Pipelines in a Openflow enabled switch thus facilitating implementation of various Networking Use cases through manipulation & switching of packets. While designing the processing steps for a new packet flow, it is often required to perform experimentation by configuring multiple flow, group and meter entries to arrive at an optimal solution which is thereafter encoded into final application for deployment into SDN controller.
 
+While working with ONOS SDN Controller, it has been found that there is no such intuitive tool/utility available to configure or edit flow/group entries currently. Hence, we propose to design, prototype and contribute into Community a Web GUI application for performing CRUD operations on flow/group entries on ONOS controlled devices in an intuitive manner thus saving effort during Pipeline design process. With intelligent field validations and pre-population based on Auto-Discovery (e.g. available ports on switch), it will accelerate the definition of flow-entries without worrying about syntactical error possible in Rest API calls for Flow additions.
 
-## Packet Editor
-  The packet editor is a visual framework for constructing packets. A user can 
-  create new packets, and edit or delete existing packets. They can also save their 
-  new packets or packet modifications so that they will be available upon
-  subsequent logins. 
- 
-### Packet Names
-  Packet names currently follow these restrictions:
-  * name must not already be in use
-  * name must match the regex ^[a-zA-Z_][a-zA-Z0-9_]*$
+We further envision to manage variations among the Openflow Standards and standardized Table Type Patterns (e.g. OFDPA) using Profiles in this application. The available options and tables, while configuring a Pipeline flow, would be governed by the profile applicable to the target device thus bringing more efficiency in pipeline design process. The application will support Profiles definition through YANG models to facilitate easy incorporation of new Profiles dynamically.
 
-### Packet Editing
-  The packet with the current focus will be displayed in the center of the
-  screen. An editor control is on the right side of the screen and allows for
-  user manipulation of the packet. Currently all packets are initialized with an
-  Ethernet header. 
-  
-  The user may stack new payloads and delete existing payloads from the packet.
-  A payload is selected from the dropdown selector on the editor control. The 
-  dropdown selector will display a list of all available protocols for the
-  packet. Adding protocols will change the selector list and follow a specific 
-  protocol dependency chain.
+This application will be a standalone Web application based on AngularJS UI framework and Java backend; and can be deployed into basic Web Container (apache tomcat). Its build system will be created to generate a single distributable binary/archive with clearly defined instructions for installation alongside an ONOS controller. This application will consume REST API of ONOS application for performing CRUD operations on flow/group entries and retrieving Device/Port configurations.
 
-![Image of PacketEditor](http://flowgrammable.org/static/media/uploads/packet_editor.png )
+Features
+AsMain objective of this application is to provide a convenient, intuitive Web-based Graphical interface to view & configure the Flows, Graphs and Meters for a switch using ONOS Rest API in the backend. In that context, following set of functional features would be supported by this application.
 
-  Protocol fields may also be modified by the user in the editor control. Select a
-  protocol in the stack and a panel will open, inside this panel are a series of
-  protocol fields that may be changed. Invalid inputs are indicated with a red
-  shadow, and hints are provided with tooltips. The packet display in the center
-  of the screen will update as you modify the packet.
+Flow Management
+This mainly refers to functional views available on Web UI screens of application. Support for following operations is needed:
 
-## Profile Editor
-  The profile editor is a visual framework for managing OpenFlow switch 
-  profiles. A switch profile enumerates the capabilities of a type of switch,
-  this is similar to an ONF defined Table Type Pattern (TTP). Users can create
-  new profiles, and edit or delete existing profiles. Users can also save their 
-  new profiles or profile modifications so that they will be available upon
-  subsequent logins. 
+Login page with Username/Password. Credentials of backend ONOS should be used
+View List of Switches managed by ONOS
+View basic Details of Switch - as available from ONOS API Response
+View Flows configured on Switch
+View details of flows configured on Switch (Table, Match fields, Priority, Timeout, Instructions, Counters, Cookie)
+Delete configured flows
+Add new flow entry
+Clone an existing flow entry
+Match Fields
+Match fields to be displayed will be governed by the Profile associated with the Switch. When adding a flow, only those fields which are allowed as part of Match criteria for the profile are made available in UI screen. When displaying the match criteria, all retrieved match fields will be displayed in UI screen but those fields which are not part of associated profile will be displayed in RED.
 
-![Image of ProfileEditor](http://flowgrammable.org/static/media/uploads/profile_editor.png )
+Match fields - It Corresponds to criteria fields under selector element in ONOS API response. Match fields to be supported includes
+Input Port
+L2 header fields
+L3 header fields
+MPLS fields
+The master list of allowed fields would be configurable as a yaml file in application configuration. It would match with allowed Criteria.Type Enum values defined in ONOS API
 
-  A profile determines the capabilities of a type or category of a switch. The
-  underying data model is almost identical to the switch configuration data
-  with the exception of managing capabilities and not configuration state. 
-  Some of the capabilities a user can decide are:
-  - the fragmentation capabilities of the data path
-  - the number of ports of the switch
-  - the speed and medium of the switch ports
-  - the number of tables supported on the switch
-  - per table protocol match capability: exact, exact-default, prefix, mask
-  - per table instructions supported
-  - per table apply actions supported
-  - per table write actions supported
-  - per table goto restriction sets
- 
-### Profile Names
-  Profile names currently follow these restrictions:
-  * name must not already be in use
-  * name must match the regex ^[a-zA-Z_][a-zA-Z0-9_]*$
+Auto Discovery and Intelligence
+Further details to be added.
 
-## Switch Editor
-  The switch editor is a visual framework for managing the configuration state
-  of a switch. A user can create new switches, and edit or delete existing 
-  switches. The user can save their new switch or switch modifications so that
-  they will be available upon subsequent logins. 
+Group Management
+Further details to be added.
 
-  The switch editor manipulates the configuration state of a switch. When the
-  user creates a new switch they must select a switch profile to instantiate. 
-  The newly constructed switch will have immutable capabilities determined by
-  the selected profile. The configuration data model expands slightly on the the
-  data model exposed in switch profile.
+Meters Management
+Further details to be added.
 
-  Users can manage data path behaviors including, for example, the fragmentation
-  behavior of the datapath (drop fragments, reassemble fragments, or do nothing
-  special for fragments). Ports can be administratively placed into down or up
-  states, a visual indication is provided as to the current administrative state
-  of the port. Ports can also be placed in semi-blocking states (no receive, no
-  forward), as well as masking future packet-in exceptions.
+Profiles
+Profile refers to the differentiated behaviour and semantics of flows, groups and meters supported by various types and versions of Switches being programmed by ONOS. Each switch has a type and is compliant to a specific version of Openflow protocol; which governs which all attributes of flows is supported by that switch. For example, TCP_FLAGS is supported as a match field for Flow entry in Openflow version 1.5.1 but not in verison 1.3.0.
 
-  Tables are arranged by name and, when selected, show a flow table summary. A 
-  flow summary is a compact representation of a flow's priority, match set, and 
-  instruction set. Selecting an installed flow will open a dialog to configure
-  that flow. Deleting an installed flow is possible by clicking on the minus icon 
-  by the flow in the flow summary table. Finally, adding a new flow to the table
-  is accomplished by setting a flow priority and clicking Add Flow. This action
-  will open the flow editor dialog.
+Flowbuild app will support multiple profiles; each compliant to a specific type and openflow protocol version. Each profile will be configured into a separate file named 'profile-name.yaml' and placed into profiles folder in the deployed application. All supported profiles will be loaded by flow-build application at the startup; any profile file not in correct format will be discarded and not loaded.
 
-![Image of FlowEditor](http://flowgrammable.org/static/media/uploads/switch_editor.png )
+Thereafter, each discovered switch (returned in ONOS API call) will be associated with one of the loaded profile depending of device type and openflow version of switch. The configuration options displayed by flowbuild in UI screens of flows, groups and meters would be governed by the customizations & rules defined in the Profile associated with the switch.
 
-  The flow editor lets a user manage the flow's match and instruction sets. The
-  match set is a canonical set of matches. Every packet has internal meta data 
-  (ingress port information) as well as an Ethernet header fields that can be 
-  matched against. However, matching against higher-layer protocol fields 
-  requires proving that the higher-layer protocol exists. This is accomplished by
-  matching a payload discriminator for the value of the desired protocol. For
-  instance, matching Ethernet.type = 0x0800 (IPv4), will make it possible to
-  match on IPv4 protocol fields. Matches are deleted from the back of the match
-  set.
+There would also be a default profile with corresponding profile filename as 'default.yaml'. This defines customizations & rules for any switch which does not match the pre-configured profiles and hence would belong to the default profile.
 
-  Instructions can be added and removed from the instruction set by enabling
-  or disabling the relevant instruction button. A meter can be enabled and a
-  meter id can be set, which will send a matching packet to the targeted meter. 
-  Actions can be added or removed from the Apply and Write instructions. Constant 
-  values can be passed to a subsequent table through the metadata register. And
-  finally, flow control can jump to subsequent tables by setting the goto target.
+To start with, a single profile with switch type 'ofdpa' and Openflow version '1.3.4' will be supported.
 
-  Actions are simple functions that let a user affect the delivery of a packet 
-  or modify a packet in some way. Actions set in the Apply action list will 
-  immediately be evaluated, while actions in the Write action set will 
-  eventually be evaluated. When a packet matches a flow the Apply action list is
-  immediately executed, which can modify the packet and deliver the packet to a
-  port or group. The action set of the Write is deferred by placing the actions
-  into a data structure that follows the packet through the packet processing 
-  pipeline. This data structure is the packet's action set.
+Refer to the page for syntax and format of the profile file.
 
-  The Apply action list has few restrictions; actions can be repeated and there
-  are no ordering requirements. However, the Write action set will enforce a
-  uniqueness and ordering requirement. Actions are not allowed to repeat 
-  themselves in the action set, and they must be evaluated in a specific order.
-  The flow dialog will enforce all of these restrictions so the user does not
-  have to concern themselves with the details. Finally, the flow dialog enforces
-  Apply action safety. This means it prevents a user from using actions on 
-  protocol fields that may not exist in the matched packet. This mechanism is
-  similar to the protocol discriminator method described above in match sets. 
- 
-### Switch Names
-  Switch names currently follow these restrictions:
-  * name must not already be in use
-  * name must match the regex ^[a-zA-Z_][a-zA-Z0-9_]*$
+Containerization
+Further details to be added.
 
-## Simulation Editor
+This application provides following Graphical Views for user operations
 
-![Image of SimulatorEditor](http://flowgrammable.org/static/media/uploads/simulation_editor.png )
+GUI Pages
+This application provides following Graphical Views for user operations:
 
-  The simulation editor is a visual framework for constructing traces and 
-  managing a simulation. A user can create new traces, and edit or delete existing
-  traces. The user can save their new traces or trace modificaitons so that 
-  they will be available upon subsequent logins. A trace is a named switch and a
-  sequence of packets along with the ports those packets should be injected in 
-  the target switch. A user can select any switch or packet which has been 
-  constructed through the packet and switch editors. When building a trace the
-  user can specify the ingress logical port id, physical port id, and tunnel id
-  to be seen by the data plane.
-
-  Once a switch has been selected and at least a single packet has been inserted
-  into the trace, the simulation can begin. The simulation can be started by
-  pressing the play button on the top left portion of screen.
-
-### Simulation Names
-  Simulation names currently follow these restrictions:
-  * name must not already be in use
-  * name must match the regex ^[a-zA-Z_][a-zA-Z0-9_]*$
-
-## Simulation Visualization
-  Once a simulation begins the user has two controls to run the simulation.
-  There is a step button on the top left of the screen which will advance the
-  simulation by a single step, and there is a stop button which will cause the 
-  simulation to stop and return the user to the simulation editor. At the top
-  of the simulation is a pipeline summary with a green shadow representing the
-  current progress of the packet through the system. With each subsequent step
-  the packet will journey through the pipeline, moving between stages, sometimes
-  taking multiple steps per stage. In each stage a visualization is presented to
-  the user of the underlying abstract machine processing the packet.
-
-  The pipeline is broken into 7 stages: arrival, extraction, choice, selection,
-  execution, groups, and egress. Actual system pipelines may have different 
-  organizations than what is presented in Flowsim; however, they must be 
-  equivalent in terms of external events. Put another way, the same set of 
-  configuration and packet inputs should yield the same set of exception and 
-  packet outputs. This means Flowsim provides an excellent vantage point to 
-  learn about the pipeline abstractions and how they affect packets flowing
-  through the system.
-
-  The arrival stage shows a packet entering the system along with construction 
-  and initialization of the data structures that will flow with the packet
-  through the pipeline. The primary data structure that flows through the 
-  pipeline is the packet context. The context contains the packet key, which is
-  a set of values used to determine which flow matches a packet. The packet key
-  is initialized with some internal data about how the packet arrived. The
-  context is initialized with table and buffer processing information.
-
-![Image of Arrival](http://flowgrammable.org/static/media/uploads/arrival.png )
-
-  The extraction stage is where a packet is decoded and the packet key is built
-  up to contain a larger set of protocol fields. Each protocol header in the 
-  packet is decoded in a single step and a subset of the protocol header is 
-  copied over to the packet key. In actual systems this stage can be broken up
-  and deferred to later in the pipeline. The only absolute ordering is imposed
-  by attempting to match or set a protocol field. Flowsim performs a complete 
-  packet decode at the front of the pipeline for clarity.
-  
-![Image of Extraction](http://flowgrammable.org/static/media/uploads/extraction.png)
-  
-  The choice stage is quite simple and uses the table identifier from the packet
-  context to select a single table from the collection of tables. Because the
-  pipeline allows for control flow between tables, this stage is the meet point 
-  for going to another table.
-
-![Image of Choice](http://flowgrammable.org/static/media/uploads/choice.png)
-
-  The selection stage takes a packet key and a table index and selects the 
-  highest priority flow that matches. This flow is added to the context for
-  subsequent processing. A packet key does not have to match any flow in the 
-  table.
-
-![Image of Selection](http://flowgrammable.org/static/media/uploads/selection.png)
-
-  The execution stage is one of the most interesting stages in the pipeline. In 
-  this stage a user can single-step the simulation and see exactly:
-  - how instructions are executed
-  - how apply actions immediately impact delivery or modify the packet
-  - how clear will empty the context's action set
-  - how write actions merge into the context's action set
-  - how the table identifier is updated
-  - how the context will complete table processing or proceed to another table
-
-![Image of Execution](http://flowgrammable.org/static/media/uploads/execution.png)
-
-  The groups stage displays group processing of a packet (all, indirect, select,
-  and fast failover). Group processing is currently not supported in Flowsim.
-
-  The egress stage is the final stage of packet processing. In this stage the 
-  packet context's action set is executed. A user can step each action in the 
-  set and see how it modifies the packet before finally delivering the packet.
+Login page with Username/Password. Credentials of backend ONOS should be used
+Home page - Lists option 'Switches' and 'Profiles' in the tab (top or left) to select the switch/profile to configure.
+On selection of Switch option, displays list of switches that are managed by underlying ONOS instance in a table. Clicking on Switch opens the Switch page. The basic details of switch i.e. dpid, management ip-address, type of switch, no of ports, connection time etc. are displayed in table.
+On selection of Profiles option, displays list of profiles that are configured in a table. Clicking on Profile opens the Profile page
+Switch page - Displays basic information about switch. Lists option 'Flows' and 'Groups' in the tab (top or left) to select.
+On selection of Flows option, displays list of flows configured on the switch. The basic details of flow i.e. table number, management ip-address, type of switch, no of ports, connection time etc. are displayed in table.
+To be added
