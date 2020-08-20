@@ -49,7 +49,7 @@
   "homepage": "https://github.com/flowgrammable/flowsim",
   "dependencies": {
     "async": "^0.9.0",
-    "bcrypt": "^0.8.0",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.8.1",
     "bunyan": "^1.0.1",
     "commander": "^2.3.0",
